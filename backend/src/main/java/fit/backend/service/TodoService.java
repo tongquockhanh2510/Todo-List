@@ -28,4 +28,16 @@ public class TodoService {
                 .build();
         return todoRepository.save(todo);
     }
+
+    private Todo getTodoById(Long id) {
+        return todoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Todo not found with id: " + id));
+    }
+
+    public Todo updateTodo(Long id, TodoRequest todoRequest){
+        Todo todo = getTodoById(id);
+        todo.setTitle(todoRequest.getTitle());
+        todo.setDescription(todoRequest.getDescription());
+        return todoRepository.save(todo);
+    }
 }
