@@ -1,12 +1,11 @@
 package fit.backend.controller;
 
+import fit.backend.dto.request.TodoRequest;
 import fit.backend.entity.Todo;
 import fit.backend.service.TodoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,6 +19,11 @@ public class TodoController {
     @GetMapping
     public List<Todo> getTodos(String title) {
         return todoService.getTodos(title);
+    }
+
+    @PostMapping
+    public Todo createTodo(@Valid @RequestBody TodoRequest request) {
+        return todoService.createTodo(request);
     }
 
 }
