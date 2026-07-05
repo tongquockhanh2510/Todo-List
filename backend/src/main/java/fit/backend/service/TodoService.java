@@ -12,12 +12,38 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TodoService {
     private final TodoRepository todoRepository;
-    public List<Todo> getTodos(String title) {
-        if (title != null && !title.isEmpty()) {
-            return todoRepository.findByTitleContainingIgnoreCase(title);
-        } else {
-            return todoRepository.findAll();
+    public List<Todo> getTodos(String keyword, String status) {
+        boolean hasKeyword = keyword != null && !keyword.trim().isEmpty();
+        boolean hasStatus = status != null && !status.equalsIgnoreCase("all");
+
+        if (hasKeyword && hasStatus) {
+            return todoRepository.findByTitleContainingIgnoreCaseAndCompletedOrderByCreatedAtDesc(
+                    keyword.trim(),
+                    parseStatus(status)
+            );
         }
+
+        if (hasKeyword) {
+            return todoRepository.findByTitleContainingIgnoreCaseOrderByCreatedAtDesc(keyword.trim());
+        }
+
+        if (hasStatus) {
+            return todoRepository.findByCompletedOrderByCreatedAtDesc(parseStatus(status));
+        }
+
+        return todoRepository.findAllByOrderByCreatedAtDesc();
+    }
+
+    private Boolean parseStatus(String status) {
+        if (status.equalsIgnoreCase("completed")) {
+            return true;
+        }
+
+        if (status.equalsIgnoreCase("pending")) {
+            return false;
+        }
+
+        throw new RuntimeException("Invalid status. Use: all, completed, pending");
     }
 
     public Todo createTodo(TodoRequest todoRequest){

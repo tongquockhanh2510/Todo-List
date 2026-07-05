@@ -17,8 +17,11 @@ public class TodoController {
 
     private final TodoService todoService;
     @GetMapping
-    public List<Todo> getTodos(String title) {
-        return todoService.getTodos(title);
+    public List<Todo> getTodos(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false, defaultValue = "all") String status
+    ) {
+        return todoService.getTodos(keyword, status);
     }
 
     @PostMapping
