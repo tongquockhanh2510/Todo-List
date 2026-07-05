@@ -40,4 +40,16 @@ public class TodoService {
         todo.setDescription(todoRequest.getDescription());
         return todoRepository.save(todo);
     }
+
+    public void deleteTodo(Long id) {
+        Todo todo = getTodoById(id);
+        todoRepository.delete(todo);
+    }
+
+    public Todo toggleTodo(Long id) {
+        Todo todo = getTodoById(id);
+        todo.setCompleted(!todo.getCompleted());
+
+        return todoRepository.save(todo);
+    }
 }
