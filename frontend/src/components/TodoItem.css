@@ -1,32 +1,112 @@
 .todo-item {
   display: flex;
   justify-content: space-between;
-  gap: 12px;
-  padding: 8px;
-  border: 1px solid #ccc;
+  gap: 14px;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid #dbe3ee;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
 }
 
-.todo-content h3,
+.todo-content {
+  min-width: 0;
+}
+
+.todo-content h3 {
+  margin: 0 0 4px;
+  color: #0f172a;
+  font-size: 16px;
+  line-height: 1.25;
+}
+
 .todo-content p {
-  margin: 0 0 6px;
+  display: -webkit-box;
+  margin: 0 0 7px;
+  overflow: hidden;
+  color: #475569;
+  font-size: 14px;
+  line-height: 1.35;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.todo-content span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.todo-item.completed {
+  background: rgba(248, 250, 252, 0.96);
 }
 
 .todo-item.completed h3 {
+  color: #64748b;
   text-decoration: line-through;
+}
+
+.todo-item.completed .todo-content span {
+  background: #dcfce7;
+  color: #166534;
 }
 
 .todo-actions {
   display: flex;
   gap: 6px;
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+}
+
+.todo-actions button {
+  min-height: 32px;
+  border: 0;
+  border-radius: 8px;
+  padding: 0 10px;
+  background: #e0f2fe;
+  color: #075985;
+  font-size: 13px;
+  font-weight: 700;
+  transition:
+    background 0.18s ease,
+    transform 0.18s ease;
+}
+
+.todo-actions button:hover {
+  background: #bae6fd;
+  transform: translateY(-1px);
 }
 
 .todo-actions .danger {
-  background: #dc2626;
-  border-color: #dc2626;
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.todo-actions .danger:hover {
+  background: #fecaca;
 }
 
 @media (max-width: 640px) {
   .todo-item {
     flex-direction: column;
+    align-items: stretch;
+  }
+
+  .todo-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .todo-actions button {
+    flex: 1;
   }
 }

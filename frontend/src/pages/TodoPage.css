@@ -1,56 +1,158 @@
 .app {
-  padding: 16px;
+  min-height: 100vh;
+  padding: 18px 14px;
 }
 
 .container {
-  max-width: 900px;
-  margin: auto;
+  width: min(920px, 100%);
+  margin: 0 auto;
 }
 
-.page-header,
-.filters,
-.pagination,
-.form-actions,
-.modal-header {
+.page-header {
   display: flex;
-  gap: 8px;
-  margin-bottom: 12px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
 }
 
-.page-header,
-.modal-header {
-  justify-content: space-between;
+.page-header h1 {
+  margin: 0;
+  text-align: center;
+  color: #0f172a;
+  font-size: clamp(28px, 4vw, 40px);
+  line-height: 1;
+}
+
+.filters,
+.todo-list,
+.pagination {
+  width: 100%;
+}
+
+.filters {
+  margin-bottom: 10px;
+  padding: 12px;
+  border: 1px solid #dbe3ee;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.07);
+}
+
+.todo-form input,
+.todo-form textarea,
+.filters input,
+.filters select {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #111827;
+  outline: none;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.todo-form input,
+.filters input,
+.filters select {
+  height: 38px;
+  padding: 0 11px;
+}
+
+.todo-form textarea {
+  height: 38px;
+  min-height: 38px;
+  max-height: 72px;
+  padding: 9px 11px;
+  resize: vertical;
+}
+
+.todo-form input:focus,
+.todo-form textarea:focus,
+.filters input:focus,
+.filters select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+.form-actions,
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.form-actions {
+  flex-wrap: nowrap;
 }
 
 .filters {
   display: grid;
-  grid-template-columns: 1fr 150px auto;
+  grid-template-columns: minmax(0, 1fr) 160px auto;
+  gap: 10px;
 }
 
-input,
-select,
-textarea,
-button {
-  padding: 8px;
+.add-button,
+.todo-form button,
+.filters button,
+.pagination button {
+  min-height: 38px;
+  border: 0;
+  border-radius: 9px;
+  padding: 0 14px;
+  background: #2563eb;
+  color: #ffffff;
+  font-weight: 700;
+  transition:
+    background 0.18s ease,
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
-button.secondary,
-.close-button {
-  color: #222;
-  background: #e5e7eb;
-  border-color: #e5e7eb;
+.add-button:hover,
+.todo-form button:hover,
+.filters button:hover,
+.pagination button:hover:not(:disabled) {
+  background: #1d4ed8;
+  box-shadow: 0 10px 22px rgba(37, 99, 235, 0.2);
+  transform: translateY(-1px);
 }
 
-input,
-select,
-textarea {
-  width: 100%;
+.add-button:disabled,
+.todo-form button:disabled,
+.filters button:disabled,
+.pagination button:disabled {
+  cursor: not-allowed;
+  background: #cbd5e1;
+  color: #64748b;
 }
 
-.todo-list,
-.todo-form {
+.todo-form .secondary {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.todo-form .secondary:hover {
+  background: #cbd5e1;
+  box-shadow: none;
+}
+
+.todo-list {
   display: grid;
   gap: 8px;
+}
+
+.empty {
+  margin: 0;
+  padding: 18px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.7);
+  color: #64748b;
+  text-align: center;
 }
 
 .pagination {
@@ -58,26 +160,95 @@ textarea {
   margin-top: 12px;
 }
 
+.pagination span {
+  color: #475569;
+  font-weight: 700;
+}
+
 .modal-backdrop {
   position: fixed;
   inset: 0;
+  z-index: 20;
   display: grid;
   place-items: center;
-  background: #0006;
+  padding: 18px;
+  background: rgba(15, 23, 42, 0.42);
 }
 
 .todo-modal {
-  width: min(480px, 90vw);
-  padding: 16px;
-  background: white;
+  width: min(520px, 100%);
+  border: 1px solid #dbe3ee;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 26px 70px rgba(15, 23, 42, 0.24);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px 0;
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 22px;
+}
+
+.close-button {
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #334155;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.close-button:hover {
+  background: #e2e8f0;
+}
+
+.todo-modal .todo-form {
+  display: grid;
+  gap: 12px;
+  width: 100%;
+  padding: 18px;
+}
+
+.todo-modal .todo-form textarea {
+  height: 110px;
+  max-height: 180px;
 }
 
 @media (max-width: 640px) {
-  .page-header,
-  .filters,
-  .pagination,
-  .form-actions {
-    grid-template-columns: 1fr;
+  .app {
+    padding: 14px 10px;
+  }
+
+  .page-header {
+    align-items: stretch;
     flex-direction: column;
+  }
+
+  .add-button {
+    width: 100%;
+  }
+
+  .filters {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-wrap: wrap;
+  }
+
+  .form-actions button,
+  .filters button,
+  .pagination button {
+    flex: 1;
   }
 }
