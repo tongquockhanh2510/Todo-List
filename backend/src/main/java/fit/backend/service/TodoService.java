@@ -1,40 +1,79 @@
 package fit.backend.service;
 
 import fit.backend.dto.request.TodoRequest;
+import fit.backend.dto.response.TodoResponse;
 import fit.backend.entity.Todo;
+import fit.backend.mapper.TodoMapper;
 import fit.backend.repository.TodoRepository;
+import fit.backend.specification.TodoSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class TodoService {
+
     private final TodoRepository todoRepository;
-    public List<Todo> getTodos(String keyword, String status) {
-        boolean hasKeyword = keyword != null && !keyword.trim().isEmpty();
-        boolean hasStatus = status != null && !status.equalsIgnoreCase("all");
 
-        if (hasKeyword && hasStatus) {
-            return todoRepository.findByTitleContainingIgnoreCaseAndCompletedOrderByCreatedAtDesc(
-                    keyword.trim(),
-                    parseStatus(status)
-            );
+        public Page<TodoResponse> getTodos(String keyword, String status, int page, int size, String sortBy, String direction) {
+            Boolean completed = parseStatus(status);
+
+            Sort sort = direction.equalsIgnoreCase("asc")
+                    ? Sort.by(sortBy).ascending()
+                    : Sort.by(sortBy).descending();
+
+            Pageable pageable = PageRequest.of(page, size, sort);
+
+            Specification<Todo> spec = Specification
+                    .where(TodoSpecification.hasKeyword(keyword))
+                    .and(TodoSpecification.hasCompleted(completed));
+
+            return todoRepository.findAll(spec, pageable)
+                    .map(TodoMapper::toResponse);
         }
 
-        if (hasKeyword) {
-            return todoRepository.findByTitleContainingIgnoreCaseOrderByCreatedAtDesc(keyword.trim());
-        }
+    public TodoResponse createTodo(TodoRequest request) {
+        Todo todo = Todo.builder()
+                .title(request.getTitle().trim())
+                .description(request.getDescription())
+                .completed(false)
+                .build();
 
-        if (hasStatus) {
-            return todoRepository.findByCompletedOrderByCreatedAtDesc(parseStatus(status));
-        }
+        return TodoMapper.toResponse(todoRepository.save(todo));
+    }
 
-        return todoRepository.findAllByOrderByCreatedAtDesc();
+    public TodoResponse updateTodo(Long id, TodoRequest request) {
+        Todo todo = getTodoById(id);
+
+        todo.setTitle(request.getTitle().trim());
+        todo.setDescription(request.getDescription());
+
+        return TodoMapper.toResponse(todoRepository.save(todo));
+    }
+
+    public TodoResponse toggleTodo(Long id) {
+        Todo todo = getTodoById(id);
+        todo.setCompleted(!todo.getCompleted());
+
+        return TodoMapper.toResponse(todoRepository.save(todo));
+    }
+
+    public void deleteTodo(Long id) {
+        todoRepository.delete(getTodoById(id));
+    }
+
+    private Todo getTodoById(Long id) {
+        return todoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Todo not found"));
     }
 
     private Boolean parseStatus(String status) {
+        if (status == null || status.equalsIgnoreCase("all")) {
+            return null;
+        }
+
         if (status.equalsIgnoreCase("completed")) {
             return true;
         }
@@ -44,38 +83,5 @@ public class TodoService {
         }
 
         throw new RuntimeException("Invalid status. Use: all, completed, pending");
-    }
-
-    public Todo createTodo(TodoRequest todoRequest){
-        Todo todo = Todo.builder()
-                .title(todoRequest.getTitle())
-                .description(todoRequest.getDescription())
-                .completed(false)
-                .build();
-        return todoRepository.save(todo);
-    }
-
-    private Todo getTodoById(Long id) {
-        return todoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Todo not found with id: " + id));
-    }
-
-    public Todo updateTodo(Long id, TodoRequest todoRequest){
-        Todo todo = getTodoById(id);
-        todo.setTitle(todoRequest.getTitle());
-        todo.setDescription(todoRequest.getDescription());
-        return todoRepository.save(todo);
-    }
-
-    public void deleteTodo(Long id) {
-        Todo todo = getTodoById(id);
-        todoRepository.delete(todo);
-    }
-
-    public Todo toggleTodo(Long id) {
-        Todo todo = getTodoById(id);
-        todo.setCompleted(!todo.getCompleted());
-
-        return todoRepository.save(todo);
     }
 }
