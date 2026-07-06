@@ -1,8 +1,27 @@
+
 .gradle/
 build/
+out/
 *.class
+
+
+.idea/
+*.iml
+
+
+logs/
+*.log
+
+
+.env
+.env.*
+!.env.example
+
 
 node_modules/
 dist/
 *.tsbuildinfo
 .eslintcache
+
+.DS_Store
+Thumbs.db
