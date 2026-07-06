@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { Todo, TodoPage } from '../types/todo';
 
-const API_URL = 'http://localhost:8080/api/todos';
+const API_URL = import.meta.env.VITE_API_BASE_URL;;
 export interface TodoRequest {
     title: string;
     description: string;
