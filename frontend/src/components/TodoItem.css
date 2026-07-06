@@ -1,0 +1,27 @@
+.todo-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+}
+.todo-content h3 {
+  margin: 0 0 8px;
+}
+
+.todo-content p {
+  margin: 0 0 8px;
+  color: #4b5563;
+}
+
+.todo-content span {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #e5e7eb;
+  font-size: 12px;
+}
+
+.todo-item.completed h3 {
+  text-decoration: line-through;
+  color: #6b7280;
+}
